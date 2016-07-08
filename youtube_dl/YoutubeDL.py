@@ -597,8 +597,8 @@ class YoutubeDL(object):
             # Temporary fix for #4787
             # 'Treat' all problem characters by passing filename through preferredencoding
             # to workaround encoding issues with subprocess on python2 @ Windows
-            if sys.version_info < (3, 0) and sys.platform == 'win32':
-                filename = encodeFilename(filename, True).decode(preferredencoding())
+            #if sys.version_info < (3, 0) and sys.platform == 'win32':
+            #    filename = encodeFilename(filename, True).decode(preferredencoding())
             return sanitize_path(filename)
         except ValueError as err:
             self.report_error('Error in output template: ' + str(err) + ' (encoding: ' + repr(preferredencoding()) + ')')
@@ -1642,6 +1642,8 @@ class YoutubeDL(object):
                             new_info = dict(info_dict)
                             new_info.update(f)
                             fname = self.prepare_filename(new_info)
+                            if sys.version_info < (3, 0) and sys.platform == 'win32':
+                                fname = encodeFilename(fname, True).decode(preferredencoding())
                             fname = prepend_extension(fname, 'f%s' % f['format_id'], new_info['ext'])
                             downloaded.append(fname)
                             partial_success = dl(fname, new_info)
